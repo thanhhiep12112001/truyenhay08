@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable
 {
@@ -17,11 +18,19 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    public $timestamps = true;
     protected $fillable = [
         'name',
         'email',
         'password',
+        'created_at',
+        'updated_at',
+        'email_verified_at',
+        'is_admin',
+        'remember_token'
     ];
+    protected $primaryKey = 'id';
+    protected $table = 'users';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -41,4 +50,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function likes()
+    {
+        return $this->belongsToMany(Story::class, 'likes', 'id_user', 'story_id');
+    }
 }
